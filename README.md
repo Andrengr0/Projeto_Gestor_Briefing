@@ -6,7 +6,8 @@
 
 O projeto "Gestor de Briefings" é uma aplicação web desenvolvida para auxiliar na gestão e organização de briefings de projetos. Com esta aplicação, os usuários podem criar, visualizar, editar e excluir briefings de forma eficiente.
 
-## Tecnologias Utilizadas
+
+## Tecnologias Utilizadas no Back-end
 
 - **Node.js:** Plataforma de desenvolvimento JavaScript assíncrona orientada a eventos, utilizada no lado do servidor.
 - **Express.js:** Framework web para Node.js que fornece um conjunto robusto de recursos para desenvolver aplicativos web e APIs.
@@ -14,6 +15,16 @@ O projeto "Gestor de Briefings" é uma aplicação web desenvolvida para auxilia
 - **Mongoose:** ODM (Object Data Modeling) para MongoDB, utilizado para modelar os dados da aplicação e fornecer uma interface mais simples e baseada em esquemas para interagir com o MongoDB.
 - **bcrypt:** Biblioteca para hash de senhas, utilizada para armazenar senhas de forma segura no banco de dados.
 - **EJS (Embedded JavaScript):** Mecanismo de renderização de HTML utilizado para renderizar as visualizações dinâmicas da aplicação.
+
+
+## Tecnologias Utilizadas no Front-end
+
+- **HTML 5:** Linguagem de marcação utilizada para estruturar e apresentar conteúdo na web.
+- **CSS 3:** Linguagem de estilo utilizada para estilizar elementos HTML e criar layouts visualmente atraentes.
+- **Bootstrap 4.1.0:** Framework front-end que facilita o desenvolvimento de interfaces web responsivas e com um design consistente.
+- **JQuery 3.7.1:** Biblioteca de JavaScript que simplifica a manipulação do DOM e fornece uma variedade de recursos para interatividade e animação em páginas web.
+- **Font Awesome 4.0:** Conjunto de ícones vetoriais e ferramentas para adicionar ícones e glifos visualmente atraentes na aplicação.
+
 
 ## Estrutura do Projeto
 - **`Node.js`:** v18.16.0
