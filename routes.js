@@ -104,11 +104,21 @@ router.post('/admin/cadastro/briefing', async (req, res) => {
             // Realiza uma consulta ao banco de dados para obter o usuário com base no email
             const usuario = await Usuarios.findOne({ email: emailUsuario });
             
-            // Obtém a data atual
+            // Verifica se a data de prazo final é maior que a data atual
+            const prazoFinal = new Date(req.body.prazo_final);
             const dataAtual = new Date();
-
-            // Define horas, minutos, segundos e milissegundos como zero para a data atual
             dataAtual.setHours(0, 0, 0, 0);
+
+            if (prazoFinal <= dataAtual) {
+                // Se a data de prazo final for menor ou igual à data atual, retorna um erro com status 400 (Bad Request)
+                return res.status(400).json({ message: 'A data de prazo final deve ser maior que a data atual.' });
+            }
+
+            // Verifica se o orcamento é menor que zero
+            if (req.body.orcamento < 0) {
+                // Se o orcamento for menor que zero, retorna um erro com status 400 (Bad Request)
+                return res.status(400).json({ message: 'O orçamento não pode ser menor que zero.' });
+            }
 
             // Cria um novo briefing no banco de dados com base nos dados recebidos do formulário
             const briefing = await Briefings.create({
@@ -211,12 +221,28 @@ router.post('/admin/alterar/briefing/:idBriefing', async (req, res) => {
             // Extrai o ID do usuário da sessão
             const idUsuario = usuario.idUsuario;
 
+            // Verifica se a data de prazo final é maior que a data atual
+            const prazoFinal = new Date(req.body.prazo_final);
+            const dataAtual = new Date();
+            dataAtual.setHours(0, 0, 0, 0);
+
+            if (prazoFinal <= dataAtual) {
+                // Se a data de prazo final for menor ou igual à data atual, retorna um erro com status 400 (Bad Request)
+                return res.status(400).json({ message: 'A data de prazo final deve ser maior que a data atual.' });
+            }
+
             // Verifica se o briefing pertence ao usuário da sessão
             let briefing = await Briefings.findOne({ idBriefing, idUsuario });
 
             // Verificar se o briefing foi encontrado e se pertence ao usuário
             if (!briefing) {
                 return res.status(404).json({ error: 'Briefing não encontrado ou não pertence ao usuário.' });
+            }
+
+            // Verifica se o orcamento é menor que zero
+            if (req.body.orcamento_alt < 0) {
+                // Se o orcamento for menor que zero, retorna um erro com status 400 (Bad Request)
+                return res.status(400).json({ message: 'O orçamento não pode ser menor que zero.' });
             }
 
             // Atualiza o briefing no banco de dados com base no idBriefing fornecido

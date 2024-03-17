@@ -17,12 +17,19 @@ app.use(session({
     saveUninitialized: true  
 }));
 
+if(process.env.NODE_ENV === 'test') {
+    app.use((req, res, next) => {
+      req.session.email = 'andrenegreirosmcpe@gmail.com';
+      next();
+    });
+}
+
 
 const mongoose = require("mongoose");
 
 mongoose.connect("mongodb+srv://andrenegreirosmoreira:Os4uaJLF5xPVHi7L@cluster0.g7np4mf.mongodb.net/Gestor_Briefings?retryWrites=true&w=majority&appName=Cluster0",
     { useNewUrlParser: true, useUnifiedTopology: true }).then(function(){
-        console.log('Conectado com sucesso!');  // comentar essa linha para rodar nos testes
+        // console.log('Conectado com sucesso!');  // comentar essa linha para rodar nos testes
     }).catch(function(err){
         console.log(err.message);
     });
