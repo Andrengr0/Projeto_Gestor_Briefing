@@ -1,6 +1,6 @@
 # Gestor de Briefings
 
-#### Etapas alcançadas para a seleção do projeto VivaMoveis: 01, 02, 03
+#### Etapas alcançadas para a seleção do projeto VivaMoveis: 01, 02
 
 #### Neste projeto foram utilizadas Inteligências Artificiais para impulsionar a produtividade, gerando scripts úteis implementação e aprendizado, proporcionando uma série de funcionalidades e aprimoramento fundamentais para a resolução do problema, contribuindo para eficiência máxima de tempo. Esta também foi utilizada para geração de frase na apresentação do webapp e auxílio na construção desta própria documentação.
 
