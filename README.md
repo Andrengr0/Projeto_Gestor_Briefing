@@ -2,6 +2,8 @@
 
 #### Etapas alcançadas para a seleção do projeto VivaMoveis: 01, 02, 03
 
+#### Neste projeto foram utilizadas Inteligências Artificiais para impulsionar a produtividade, gerando scripts úteis implementação e aprendizado, proporcionando uma série de funcionalidades e aprimoramento fundamentais para a resolução do problema, contribuindo para eficiência máxima de tempo. Esta também foi utilizada para geração de frase na apresentação do webapp e auxílio na construção desta própria documentação.
+
 ## Visão Geral
 
 O projeto "Gestor de Briefings" é uma aplicação web desenvolvida para auxiliar na gestão e organização de briefings de projetos. Com esta aplicação, os usuários podem criar, visualizar, editar e excluir briefings de forma eficiente.
