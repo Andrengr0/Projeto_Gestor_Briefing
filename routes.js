@@ -130,7 +130,9 @@ router.post('/admin/cadastro/briefing', async (req, res) => {
                 prazoFinal: new Date(req.body.prazo_final),
                 data: dataAtual,
                 idBriefing: new Date().getTime(),
-                idUsuario: usuario.idUsuario
+                idUsuario: usuario.idUsuario,
+                autorizacao: false,
+                listUsuariosCompart: []
             });
 
             // Envia mensagem de cadastro realizado
@@ -167,7 +169,7 @@ router.get('/obter/briefings', async (req, res) => {
         const filtroBusca = req.query.busca;
 
         // Crie um objeto de filtro com base no ID do usuário
-        let filtro = { idUsuario };
+        let filtro = { $or: [{ idUsuario }, { listUsuariosCompart: idUsuario }] };
 
         // Verifica se o filtro de status está definido e diferente de "Todos"
         if (filtroStatus && filtroStatus !== "") {
@@ -184,14 +186,26 @@ router.get('/obter/briefings', async (req, res) => {
         // Busca os briefings no banco de dados com base nos filtros
         const briefings = await Briefings.find(filtro).sort({ '_id': -1 });
 
+        // Adiciona a propriedade autorizacao aos briefings
+        const briefingsFormatados = briefings.map(briefing => {
+            if (briefing.idUsuario === idUsuario) {
+                briefing.autorizacao = true;
+            } else if (briefing.listUsuariosCompart.includes(idUsuario)) {
+                briefing.autorizacao = false;
+            }
+            return briefing;
+        });
+
         // Retorna os briefings como JSON
-        res.json(briefings);
+        res.json(briefingsFormatados);
     } catch (err) {
         // Em caso de erro, envia uma mensagem de erro
         console.error('Erro ao obter os briefings:', err);
         res.status(500).json({ error: 'Erro ao obter os briefings.' });
     }
 });
+
+
 
 
 
@@ -297,7 +311,7 @@ router.get('/obter/briefing/:idBriefing', async (req, res) => {
         const idUsuario = usuario.idUsuario;
 
         // Buscar o briefing no banco de dados pelo ID e pelo ID do usuário da sessão
-        const briefing = await Briefings.findOne({ idBriefing, idUsuario });
+        const briefing = await Briefings.findOne({ idBriefing, $or: [{ idUsuario }, { listUsuariosCompart: idUsuario }] });
 
         // Verificar se o briefing foi encontrado
         if (!briefing) {
@@ -310,6 +324,74 @@ router.get('/obter/briefing/:idBriefing', async (req, res) => {
         // Em caso de erro, envia uma mensagem de erro
         console.error('Erro ao obter o briefing:', err);
         res.status(500).json({ error: 'Erro ao obter o briefing.' });
+    }
+});
+
+
+
+// Rota para compartilhar um briefing específico pelo ID
+router.post('/admin/compartilhar/briefing/:idBriefing/:emailUser', async (req, res) => {
+    // Verifica se o usuário está autenticado
+    if (!req.session.email) {
+        return res.status(401).send('Sessão expirada');
+    }
+    try {
+        // Extrair o idBriefing da URL
+        const idBriefing = req.params.idBriefing;
+
+        // Recupera o email do usuário da sessão
+        const emailUsuario = req.session.email;
+
+        // Realiza uma consulta ao banco de dados para obter o usuário com base no email
+        const usuario = await Usuarios.findOne({ email: emailUsuario });
+
+        // Verifica se o usuário foi encontrado
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuário não encontrado.' });
+        }
+
+        // Obter o email do usuário a ser compartilhado
+        const emailUsuarioCompart = req.params.emailUser; 
+        
+        // Extrai o ID do usuário da sessão
+        const idUsuario = usuario.idUsuario;
+
+        // Extrai o ID do usuário a compartilhar
+        const idUsuarioCompart = usuarioCompart.idUsuario;
+
+        // Buscar o briefing no banco de dados pelo ID e pelo ID do usuário da sessão
+        const briefing = await Briefings.findOne({ idBriefing, idUsuario });
+
+        // Verificar se o briefing foi encontrado
+        if (!briefing) {
+            return res.status(404).json({ error: 'Briefing não encontrado.' });
+        }
+
+        // Verifica se o usuário a compartilhar já está na lista listUsuariosCompart
+        if (briefing.listUsuariosCompart.includes(idUsuarioCompart)) {
+            return res.status(400).json({ error: 'O briefing já foi compartilhado com este usuário.' });
+        }
+
+        // Encontrar o usuário a ser compartilhado
+        const usuarioCompart = await Usuarios.findOne({ email: emailUsuarioCompart });
+
+        // Verificar se o usuário a ser compartilhado foi encontrado
+        if (!usuarioCompart) {
+            return res.status(404).json({ error: 'Usuário a ser compartilhado não encontrado.' });
+        }
+
+        // Adicionar o idUsuario do usuário a ser compartilhado à lista de idUsuarios do briefing
+        briefing.listUsuariosCompart.push(usuarioCompart.idUsuario);
+
+        // Salvar as alterações no briefing
+        await briefing.save();
+
+        // Retorna o briefing atualizado como JSON
+        res.json(briefing);
+    } catch (err) {
+        // Em caso de erro, envia uma mensagem de erro
+        console.error('Erro ao compartilhar o briefing:', err);
+        res.status(500).json({ error: 'Erro ao compartilhar o briefing.' });
     }
 });
 

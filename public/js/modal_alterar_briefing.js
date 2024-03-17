@@ -1,6 +1,7 @@
 
 
 function modalAlterarBriefing(idBriefing) {
+    $('.janela-float-load').css('display','block');
     $.ajax({
         type: "GET",
         url: "/obter/briefing/" + idBriefing,
@@ -13,8 +14,14 @@ function modalAlterarBriefing(idBriefing) {
             // Obtém a data atual
             const hoje = new Date().toISOString().split('T')[0];
 
-            // Obtém a data de briefing.prazoFinal no formato "YYYY-MM-DD"
-            const prazoFinalFormatado = new Date(briefing.prazoFinal).toISOString().split('T')[0];
+            // Obtém a data de briefing.prazoFinal
+            const prazoFinal = new Date(briefing.prazoFinal);
+
+            // Adiciona 12 horas à data
+            prazoFinal.setHours(prazoFinal.getHours() + 12);
+
+            // Converte a data para o formato "YYYY-MM-DD"
+            const prazoFinalFormatado = prazoFinal.toISOString().split('T')[0];
 
             // Constrói o modal para alterar briefing
             $("#box_modal_alterar_briefing").append(`
@@ -64,7 +71,7 @@ function modalAlterarBriefing(idBriefing) {
                             <span id="orcamento_invalido_alt" style="display: none; color: #ff0000;">Valor inválido</span>
                 
                             <label for="prazo_final_alt" class="mt-4" style="display: block;">Data de prazo final:</label>
-                            <input type="date" class="prazo_final" name="prazo_final_alt" id="prazo_final_alt" value="${prazoFinalFormatado}" min="${hoje}">
+                            <input type="date" class="prazo_final" name="prazo_final_alt" id="prazo_final_alt" value="${prazoFinalFormatado}">
                             <span id="prazo_final_invalido_alt" style="display: none; color: #ff0000;">Data inválida</span>
                 
                         </form>
@@ -78,7 +85,7 @@ function modalAlterarBriefing(idBriefing) {
                 </div>
                 </div> <!-- Fim do modal -->
             `);
-
+                $('.janela-float-load').css('display','none');
                 // Abre o modal após a adição do conteúdo
                 $("#modal_alterar_briefing").modal('show');
                             

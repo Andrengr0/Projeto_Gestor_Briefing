@@ -1,12 +1,4 @@
-$(()=>{
-    // Adicione um manipulador de eventos delegado para os botões de alteração de briefing
-    $('#box-card-briefing').on('click', '.col-nome', function() {
-        // Obtém o idBriefing armazenado no atributo data-id do botão
-        let idBriefing = $(this).data('id');
 
-        // Chama a função buscarBriefing para exibir o modal com os detalhes do briefing
-        buscarBriefing(idBriefing);
-    });
 
     // Função para buscar e exibir os detalhes de um briefing específico
     function buscarBriefing(idBriefing) {
@@ -30,7 +22,7 @@ $(()=>{
                     descricaoDecodificada = briefing.descricao;  // Use the original string as a fallback
                 };
 
-
+                $('.janela-float-load').css('display','none');
                 // Construir o modal com os detalhes do briefing
                 let modalHTML = `
                     <div class="modal fade" id="ModalInfo" tabindex="-1" role="dialog" aria-labelledby="ModalInfo" aria-hidden="true">
@@ -77,6 +69,7 @@ $(()=>{
 
                 // Adicionar o modal ao corpo do documento
                 $('body').append(modalHTML);
+                $('.janela-float-load').css('display','none');
 
                 // Abrir o modal
                 $('#ModalInfo').modal('show');
@@ -87,5 +80,3 @@ $(()=>{
             }
         });
     }
-
-})

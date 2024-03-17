@@ -39,6 +39,7 @@ $(()=>{
             url: "/admin/cadastro/briefing",
             data: $("#form-briefing").serialize(), // Serialize o formulário para enviar os dados corretamente
             success: function (response) {
+                $('.janela-float-load').css('display','none');
                 if(response.message != "Briefing cadastrado com sucesso!"){
                     window.location.href = '/?expired=true';
                 }

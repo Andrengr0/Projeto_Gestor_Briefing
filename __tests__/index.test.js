@@ -7,8 +7,8 @@ test('Deve retornar status 200 na rota principal', async () => {
     expect(response.statusCode).toBe(200);
 });
 
-
 describe('POST /admin/cadastro/briefing', () => {
+
   test('Deve cadastrar um novo briefing quando todos os dados são válidos', async () => {
       const response = await request(app)
           .post('/admin/cadastro/briefing')

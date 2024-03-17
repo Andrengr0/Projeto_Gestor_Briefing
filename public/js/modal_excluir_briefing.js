@@ -10,6 +10,7 @@ function excluirBriefing(idBriefing) {
             if(response.message != 'Briefing removido com sucesso!'){
                 window.location.href = '/?expired=true';
             }else{
+                $('.janela-float-load').css('display','none');
                 // Exibe a mensagem de sucesso
                 $("#msg_modal").text(response.message);
                 $(".msg-modal").fadeIn();
@@ -36,6 +37,7 @@ verificarCliqueFechar();
 
 function verificarCliqueFechar(){
     $('body').click(function(){
+        $('.janela-float-load').css('display','none');
         $('.janela-float').fadeOut();
     })
 

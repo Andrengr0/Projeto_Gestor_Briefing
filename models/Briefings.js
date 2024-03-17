@@ -11,7 +11,9 @@ var briefingSchema = new Schema({
     orcamento: String,
     prazoFinal: Date,
     data: Date,
-    idUsuario: String
+    idUsuario: String,
+    listUsuariosCompart: [String],
+    autorizacao: Boolean
 },{collection:'briefings'});
 
 var Briefings = mongoose.model("Briefings",briefingSchema);

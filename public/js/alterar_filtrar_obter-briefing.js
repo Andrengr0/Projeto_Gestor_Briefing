@@ -59,6 +59,7 @@ function enviarFormulario(idBriefing, formBriefing) {
             }
             // Após a alteração bem-sucedida, atualiza a lista de briefings
             atualizarBriefings();
+            $('.janela-float-load').css('display','none');
 
             // Define o texto da mensagem
             $("#msg_modal").text(response.message);
@@ -72,6 +73,8 @@ function enviarFormulario(idBriefing, formBriefing) {
 
 // Função para obter e atualizar a lista de briefings
 function atualizarBriefings() {
+    $('.janela-float-load').css('display','block');
+
     $.ajax({
         type: "GET", // Ou o método que você usa para obter os briefings
         url: "/obter/briefings", // A rota para obter os briefings atualizados
@@ -83,7 +86,7 @@ function atualizarBriefings() {
             // Limpa a div #box-card-briefing
             $("#box-card-briefing").empty();
 
-            if(briefings){
+            if(briefings .length > 0){
                 // Reconstrói a lista de briefings com os dados atualizados
                 for (let i = 0; i < briefings.length; i++) {
 
@@ -116,10 +119,13 @@ function atualizarBriefings() {
                         corProgresso = "#ff0000";
                     }
 
+                    $('.janela-float-load').css('display','none');
+
                     $("#box-card-briefing").append(`
                         <div class="card-briefing-single row mt-4 align-items-center">
-                            <div class="col-nome col-lg-4" data-id="${briefings[i].idBriefing}">
-                                <span class="nome-projeto">${briefings[i].titulo} <i class="fa fa-info-circle" aria-hidden="true"></i></span>
+                            <div class="col-nome col-lg-4">
+                                <span class="nome-projeto" onclick='buscarBriefing(${briefings[i].idBriefing})'">${briefings[i].titulo} <i class="fa fa-info-circle" aria-hidden="true"></i></span>
+                                <button class="btn-compartilhar" type="button" onclick='modalCompartilharBriefing(${briefings[i].idBriefing})'><i class="fa fa-share-alt" aria-hidden="true"></i></button>
                             </div><!-- col-nome -->
                             <div class="col-status col-md-3">
                                 <span class="span-cols" style="font-size: 14px; display: none;">Estado: </span>
@@ -127,11 +133,12 @@ function atualizarBriefings() {
                                     <span>${briefings[i].estado}</span>
                                 </div><!-- status -->
                             </div><!-- col-status -->
+                            ${briefings[i].autorizacao ? `
                             <div class="col-alterar col-md-2">
                                 <button class="btn-alterar-briefing" type="button" onclick='modalAlterarBriefing(${briefings[i].idBriefing})'><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
                                 <button type="button" data-id="${briefings[i].idBriefing}" class="btn-deletar"><i class="fa fa-trash" aria-hidden="true"></i></button>
                             </div><!-- col-alterar -->
-                                
+                            ` : '<div class="col-alterar col-md-2"></div>'}
                             <div class="col-prazo col-md-3">
                                 <span class="span-cols" style="font-size: 14px; display: none;">Prazo: </span>
                                 <div class="progress" style="height: 13px; background-color: #ffffff;">
@@ -139,7 +146,7 @@ function atualizarBriefings() {
                                 </div>
                             </div><!-- col-alterar -->
                         </div><!-- card-briefing-single -->
-                
+
                         <div class="janela-float deletar_${briefings[i].idBriefing}" style="display: none;">
                             <div class="float-box">
                                 <h4>Deseja realmente excluir esse briefing?</h4>
@@ -147,8 +154,10 @@ function atualizarBriefings() {
                             </div>
                         </div><!-- janela-float -->
                     `);
+
                 }
             }else{
+                $('.janela-float-load').css('display','none');
                 $("#box-card-briefing").append(`
                         <p class="text-center mt-3" style="display: block">Nenhum Briefing encontrado!</p>
                     `);
