@@ -8,10 +8,13 @@ var briefingSchema = new Schema({
     titulo: String,
     descricao: String,
     estado: String,
-    data: String,
+    orcamento: String,
+    prazoFinal: Date,
+    data: Date,
     idUsuario: String
-},{collection:'briefings'})
+},{collection:'briefings'});
 
 var Briefings = mongoose.model("Briefings",briefingSchema);
 
 module.exports = Briefings;
+

@@ -92,30 +92,44 @@ router.get('/painel/projetos', async (req,res)=>{
 
 // Rota para cadastrar um novo briefing
 router.post('/admin/cadastro/briefing', async (req, res) => {
-    try {
-        // Recupera o email do usuário da sessão
-        const emailUsuario = req.session.email;
+    // Verifica se o usuário está autenticado
+    if (req.session.email == null) {
+        // Redireciona para a página inicial com o parâmetro de sessão expirada
+        res.redirect('/?expired=true');
+    } else {
+        try {
+            // Recupera o email do usuário da sessão
+            const emailUsuario = req.session.email;
 
-        // Realiza uma consulta ao banco de dados para obter o usuário com base no email
-        const usuario = await Usuarios.findOne({ email: emailUsuario });
-        
-        // Cria um novo briefing no banco de dados com base nos dados recebidos do formulário
-        const briefing = await Briefings.create({
-            nomeCliente: req.body.nome_cliente,
-            titulo: req.body.titulo,
-            descricao: req.body.descricao,
-            estado: req.body.estado_briefing,
-            data: new Date().toLocaleString('pt-br').substr(0, 10),
-            idBriefing: new Date().getTime(),
-            idUsuario: usuario.idUsuario
-        });
+            // Realiza uma consulta ao banco de dados para obter o usuário com base no email
+            const usuario = await Usuarios.findOne({ email: emailUsuario });
+            
+            // Obtém a data atual
+            const dataAtual = new Date();
 
-        // Redireciona para a página de painel de gestão
-        res.redirect('/painel/projetos');
-    } catch (err) {
-        // Em caso de erro, exibe uma mensagem de erro e status 500
-        console.error('Erro ao cadastrar o briefing:', err);
-        res.status(500).send('Erro ao cadastrar o briefing.');
+            // Define horas, minutos, segundos e milissegundos como zero para a data atual
+            dataAtual.setHours(0, 0, 0, 0);
+
+            // Cria um novo briefing no banco de dados com base nos dados recebidos do formulário
+            const briefing = await Briefings.create({
+                nomeCliente: req.body.nome_cliente,
+                titulo: req.body.titulo,
+                descricao: req.body.descricao,
+                estado: req.body.estado_briefing,
+                orcamento: req.body.orcamento,
+                prazoFinal: new Date(req.body.prazo_final),
+                data: dataAtual,
+                idBriefing: new Date().getTime(),
+                idUsuario: usuario.idUsuario
+            });
+
+            // Envia mensagem de cadastro realizado
+            res.status(200).json({ message: 'Briefing cadastrado com sucesso!' });
+        } catch (err) {
+            // Em caso de erro, exibe uma mensagem de erro e status 500
+            console.error('Erro ao cadastrar o briefing:', err);
+            res.status(500).send('Erro ao cadastrar o briefing.');
+        }
     }
 });
 
@@ -174,50 +188,58 @@ router.get('/obter/briefings', async (req, res) => {
 
 // Rota para alterar um briefing
 router.post('/admin/alterar/briefing/:idBriefing', async (req, res) => {
-    try {
-        // Extrai o idBriefing da URL
-        const idBriefing = req.params.idBriefing;
+    // Verifica se o usuário está autenticado
+    if (req.session.email == null) {
+        // Redireciona para a página inicial com o parâmetro de sessão expirada
+        res.redirect('/?expired=true');
+    } else {
+        try {
+            // Extrai o idBriefing da URL
+            const idBriefing = req.params.idBriefing;
 
-        // Recupera o email do usuário da sessão
-        const emailUsuario = req.session.email;
+            // Recupera o email do usuário da sessão
+            const emailUsuario = req.session.email;
 
-        // Realiza uma consulta ao banco de dados para obter o usuário com base no email
-        const usuario = await Usuarios.findOne({ email: emailUsuario });
+            // Realiza uma consulta ao banco de dados para obter o usuário com base no email
+            const usuario = await Usuarios.findOne({ email: emailUsuario });
 
-        // Verifica se o usuário foi encontrado
-        if (!usuario) {
-            return res.status(404).json({ error: 'Usuário não encontrado.' });
+            // Verifica se o usuário foi encontrado
+            if (!usuario) {
+                return res.status(404).json({ error: 'Usuário não encontrado.' });
+            }
+
+            // Extrai o ID do usuário da sessão
+            const idUsuario = usuario.idUsuario;
+
+            // Verifica se o briefing pertence ao usuário da sessão
+            let briefing = await Briefings.findOne({ idBriefing, idUsuario });
+
+            // Verificar se o briefing foi encontrado e se pertence ao usuário
+            if (!briefing) {
+                return res.status(404).json({ error: 'Briefing não encontrado ou não pertence ao usuário.' });
+            }
+
+            // Atualiza o briefing no banco de dados com base no idBriefing fornecido
+            await Briefings.findOneAndUpdate(
+                { idBriefing: idBriefing }, // Procura pelo briefing com o idBriefing especificado
+                {
+                    nomeCliente: req.body.nome_cliente_alt,
+                    titulo: req.body.titulo_alt,
+                    descricao: req.body.descricao_alt,
+                    estado: req.body.estado_briefing_alt,
+                    orcamento: req.body.orcamento_alt,
+                    prazoFinal: new Date(req.body.prazo_final_alt)
+                },
+                { new: true } // Retorna o documento atualizado
+            );
+
+            // Envia mensagem de cadastro realizado
+            res.status(200).json({ message: 'Briefing alterado com sucesso!' });
+        } catch (err) {
+            // Em caso de erro, envia uma mensagem de erro
+            console.log('Erro ao alterar o Briefing', err)
+            res.status(500).json({ error: 'Erro ao alterar o briefing.' });
         }
-
-        // Extrai o ID do usuário da sessão
-        const idUsuario = usuario.idUsuario;
-
-        // Verifica se o briefing pertence ao usuário da sessão
-        let briefing = await Briefings.findOne({ idBriefing, idUsuario });
-
-        // Verificar se o briefing foi encontrado e se pertence ao usuário
-        if (!briefing) {
-            return res.status(404).json({ error: 'Briefing não encontrado ou não pertence ao usuário.' });
-        }
-
-        // Atualiza o briefing no banco de dados com base no idBriefing fornecido
-        await Briefings.findOneAndUpdate(
-            { idBriefing: idBriefing }, // Procura pelo briefing com o idBriefing especificado
-            {
-                nomeCliente: req.body.nome_cliente,
-                titulo: req.body.titulo,
-                descricao: req.body.descricao,
-                estado: req.body.estado_briefing
-            },
-            { new: true } // Retorna o documento atualizado
-        );
-
-        // Retorna os dados atualizados do briefing como JSON
-        res.json(briefing);
-    } catch (err) {
-        // Em caso de erro, envia uma mensagem de erro
-        console.log('Erro ao alterar o Briefing', err)
-        res.status(500).json({ error: 'Erro ao alterar o briefing.' });
     }
 });
 
@@ -225,6 +247,11 @@ router.post('/admin/alterar/briefing/:idBriefing', async (req, res) => {
 
 // Rota para obter um briefing específico pelo ID, associado ao usuário da sessão
 router.get('/obter/briefing/:idBriefing', async (req, res) => {
+    // Verifica se o usuário está autenticado
+    if (!req.session.email) {
+        // Verifica se o usuário está autenticado
+        return res.status(401).send('Sessão expirada');
+    }
     try {
         // Extrair o idBriefing da URL
         const idBriefing = req.params.idBriefing;
@@ -265,43 +292,51 @@ router.get('/obter/briefing/:idBriefing', async (req, res) => {
 
 // Rota para deletar um briefing
 router.get('/deletar/briefing/:idBriefing', async (req, res) => {
-    try {
-        // Extrai o idBriefing da URL
-        const idBriefing = req.params.idBriefing;
+    // Verifica se o usuário está autenticado
+    if (req.session.email == null) {
+        // Redireciona para a página inicial com o parâmetro de sessão expirada
+        res.redirect('/?expired=true');
+    } else {
+        try {
+            // Extrai o idBriefing da URL
+            const idBriefing = req.params.idBriefing;
 
-        // Recupera o email do usuário da sessão
-        const emailUsuario = req.session.email;
+            // Recupera o email do usuário da sessão
+            const emailUsuario = req.session.email;
 
-        // Realiza uma consulta ao banco de dados para obter o usuário com base no email
-        const usuario = await Usuarios.findOne({ email: emailUsuario });
+            // Realiza uma consulta ao banco de dados para obter o usuário com base no email
+            const usuario = await Usuarios.findOne({ email: emailUsuario });
 
-        // Verifica se o usuário foi encontrado
-        if (!usuario) {
-            return res.status(404).json({ error: 'Usuário não encontrado.' });
+            // Verifica se o usuário foi encontrado
+            if (!usuario) {
+                return res.status(404).json({ error: 'Usuário não encontrado.' });
+            }
+
+            // Extrai o ID do usuário da sessão
+            const idUsuario = usuario.idUsuario;
+
+            // Verifica se o briefing pertence ao usuário da sessão
+            const briefing = await Briefings.findOne({ idBriefing, idUsuario });
+
+            // Verificar se o briefing foi encontrado e se pertence ao usuário
+            if (!briefing) {
+                return res.status(404).json({ error: 'Briefing não encontrado ou não pertence ao usuário.' });
+            }
+
+            // Deleta o briefing do banco de dados com base no idBriefing e idUsuario fornecidos
+            await Briefings.deleteOne({ idBriefing, idUsuario });
+
+            // Envie uma resposta JSON confirmando a exclusão do briefing
+            res.status(200).json({ message: 'Briefing removido com sucesso!' });
+        } catch (err) {
+            // Em caso de erro, envia uma mensagem de erro
+            console.error('Erro ao deletar o briefing:', err);
+            res.status(500).json({ error: 'Erro ao deletar o briefing.' });
         }
-
-        // Extrai o ID do usuário da sessão
-        const idUsuario = usuario.idUsuario;
-
-        // Verifica se o briefing pertence ao usuário da sessão
-        const briefing = await Briefings.findOne({ idBriefing, idUsuario });
-
-        // Verificar se o briefing foi encontrado e se pertence ao usuário
-        if (!briefing) {
-            return res.status(404).json({ error: 'Briefing não encontrado ou não pertence ao usuário.' });
-        }
-
-        // Deleta o briefing do banco de dados com base no idBriefing e idUsuario fornecidos
-        await Briefings.deleteOne({ idBriefing, idUsuario });
-
-        // Redireciona para a página de usuários após a exclusão
-        res.redirect('/painel/projetos');
-    } catch (err) {
-        // Em caso de erro, envia uma mensagem de erro
-        console.error('Erro ao deletar o briefing:', err);
-        res.status(500).json({ error: 'Erro ao deletar o briefing.' });
     }
 });
+
+
 
 
 router.get('/painel/dados-pessoais', async (req, res) => {

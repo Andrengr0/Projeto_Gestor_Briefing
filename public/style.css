@@ -127,6 +127,67 @@ html,body{
 }
 
 
+@media screen and (max-width: 1200px){
+    
+    .header-home .frase-apresentacao{
+        font-size: 28px;
+        max-width: 360px;
+    }
+}
+
+@media screen and (max-width: 1000px){
+    html,body{
+        overflow-x: hidden;
+        height: 100% !important;
+    }
+
+    .header-home .waves{
+        bottom: -14%;
+        left: -50px;
+        right: -50px;
+    }
+    
+    .header-home{
+        height: 100%;
+    }
+}
+
+@media screen and (max-width: 990px){
+    
+    .header-home .frase-apresentacao{
+        font-size: 28px;
+        max-width: 360px;
+    }
+
+    .header-home .form-login{
+        top: 36%;
+    }
+}
+
+@media screen and (max-width: 768px){
+    
+    .header-home .frase-apresentacao{
+        font-size: 28px;
+        max-width: 360px;
+    }
+
+    .header-home .form-login{
+        position: relative;
+        padding: 40px 10px;
+        margin-bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 37%;
+    }
+}
+
+@media screen and (max-width: 1000px){
+    .waves{
+        display: none;
+    }
+}
+
+
 
 .card {
     background-color: #ffffff;
@@ -244,7 +305,7 @@ html,body{
 /* ##########################    ESTILIZAÇÃO  DO  PAINEL    ############################# */
 
 
-.body-painel{
+html > .body-painel{
     padding-top: 100px;
     overflow: hidden;
 }
@@ -280,12 +341,68 @@ html,body{
     height: 100%;
     max-width: 1399px;
     padding: 0 2% 0 0;
+    overflow: hidden;
 }
+
+.btn-menu-mobile{
+    position: fixed;
+    transition: 0.5s ease;
+    padding: 2px 3px 0 0;
+    background-color: #2a3a32;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    top: 102px;
+    display: inline-block;
+    z-index: 3;
+    height: 47px;
+}
+
+.hamburger {
+    cursor: pointer;
+  }
+  
+  .hamburger input {
+    display: none;
+  }
+  
+  .hamburger svg {
+    /* The size of the SVG defines the overall size */
+    height: 3em;
+    /* Define the transition for transforming the SVG */
+    transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .line {
+    fill: none;
+    stroke: white;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+    /* Define the transition for transforming the Stroke */
+    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .line-top-bottom {
+    stroke-dasharray: 12 63;
+  }
+  
+  .hamburger input:checked + svg {
+    transform: rotate(-45deg);
+  }
+  
+  .hamburger input:checked + svg .line-top-bottom {
+    stroke-dasharray: 20 300;
+    stroke-dashoffset: -32.42;
+  }
 
 aside{
     height: 100%;
     background-color: #2a3a32;
     width: 16%;
+    transition: left 0.5s ease;
+    z-index: 3;
+    overflow: hidden;
 }
 
 aside nav ul{
@@ -323,6 +440,7 @@ aside .option-menu-single span{
 }
 
 main{
+    overflow: hidden;
     width: 80%;
     padding: 15px 2% 40px 2%;
 }
@@ -331,6 +449,32 @@ main .container-main{
     width: 100%;
     height: 50vh;
     position: relative;
+}
+
+@media screen and (max-width: 1000px){
+
+    main .container-main > h4{
+        margin-top: 50px;
+    }
+
+    aside{
+        position: absolute;
+        width: 200px;
+        left: -200px;
+    }
+
+    main{
+        width: 100%;
+        padding: 8px 2% 40px 2%;
+    }
+
+    #box-card-briefing .col-nome{
+        max-width: 300px;
+    }
+
+    #box-card-briefing .col-status{
+        max-width: 150px;
+    }
 }
 
 .container-main h4,
@@ -363,6 +507,18 @@ main .container-main{
 .container-main .btn-cadastrar-briefing span{
     font-weight: 500;
     color: #000;
+}
+
+@media screen and (max-width: 480px){
+
+    .header-painel .user{
+        text-align: right;
+        padding-left: 8px;
+    }
+
+    .header-painel .container .logo img{
+        max-width: 150px;
+    }
 }
 
 .container-main .box-card-briefing{
@@ -437,7 +593,7 @@ main .container-main{
 }
 
 
-.card-briefing-single .btn-alterar{
+.card-briefing-single .btn-alterar-briefing{
     border: none;
     color: #565c6d;
     height: 0;
@@ -452,6 +608,74 @@ main .container-main{
     margin-left: 40px;
     cursor: pointer;
     height: 0px;
+}
+
+@media screen and (max-width: 990px){
+
+    .filtro-single{
+        padding: 3px 0;
+    }
+
+    .filtro-single .form-busca{
+        margin-top: 15px;
+    }
+
+    #box-card-briefing{
+        margin-top: 15px !important;
+    }
+
+    .card-briefing-header{
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 980px){
+
+    .col-alterar{
+        min-width: 150px !important;
+    }
+
+    .card-briefing-single .span-cols{
+        display: inline-block !important;
+    }
+}
+
+@media screen and (max-width: 882px){
+    .card-briefing-single .col-prazo{
+        flex: 100% !important;
+        width: 100% !important;
+        max-width: 350px !important;
+    }  
+}
+
+@media screen and (max-width: 510px){
+    aside{
+        position: absolute;
+        top: 60px;
+    }
+
+    .btn-menu-mobile{
+        top: 62px;
+    }
+    
+    .card-briefing-single .col-status,
+    .card-briefing-single .col-alterar{
+        display: inline-block !important;
+        width: 50% !important;
+    }
+
+    .header-painel,
+    .header-painel .container{
+        height: 60px;
+    }
+     
+}
+
+
+.modal .orcamento,
+.modal .prazo_final,
+.modal .estado_briefing{
+    max-width: 200px !important;
 }
 
 
@@ -472,9 +696,26 @@ main .container-main{
     max-width: 300px;
     height: 150px;
     padding: 10px;
-    margin-top: 10%;
+    margin-top: 15%;
     margin-left: 50%;
     transform: translateX(-50%);
+    border-radius: 10px;
+}
+
+@media screen and (max-width: 768px){
+    .float-box{
+        margin-top: 30%;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .float-box{
+        margin-top: 35%;
+    }
+
+    .form-busca form input{
+        width: 100% !important;
+    }
 }
 
 .float-box h4{
@@ -492,7 +733,8 @@ main .container-main{
     cursor: pointer;
 }
 
-a#btn_excluir{
+.btn-confirmar-exclusao{
+    border: 0;
     background-color: #fd9e9e;
     text-decoration: none;
     color: #000;
@@ -500,6 +742,14 @@ a#btn_excluir{
 
 .btn-cancelar{
     background-color: #f9ea60;
+}
+
+.btn-fechar{
+    background-color: #008E4C;
+    padding: 5px 20px !important;
+    color: #ffffff;
+    margin-left: 50% !important;
+    transform: translateX(-50%);
 }
 
 
@@ -532,6 +782,12 @@ a#btn_excluir{
     font-size: 15px;
     border-radius: 8px;
     padding: 3px 6px 3px 27px;
+}
+
+@media screen and (max-width: 680px){
+    .form-busca form input{
+        width: 80%;
+    }
 }
 
 

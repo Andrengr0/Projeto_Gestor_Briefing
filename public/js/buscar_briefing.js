@@ -43,7 +43,9 @@ $(()=>{
                             </button>
                         </div>
                         <div class="modal-body">
-                            <h6 class="mt-2">Nome do cliente:</h6>
+                            <h6 class="mt-2" style="font-size: 16px" >ID: <span style="font-size: 14px; font-weight: 400">${briefing.idBriefing}</span></h6>
+
+                            <h6 class="mt-4">Nome do cliente:</h6>
                             <p>${briefing.nomeCliente}</p>
 
                             <h6 class="mt-4">Título do projeto:</h6>
@@ -55,8 +57,15 @@ $(()=>{
                             <h6 class="mt-4">Estado:</h6>
                             <p>${briefing.estado}</p>
 
+                            <h6 class="mt-4">Orçamento:</h6>
+                            <p>${briefing.orcamento}</p>
+
                             <h6 class="mt-4">Data de criação:</h6>
-                            <p>${briefing.data}</p>
+                            <p>${new Date(briefing.data).toLocaleDateString('pt-BR')}</p>
+
+                            <h6 class="mt-4">Prazo final:</h6>
+                            <p>${(new Date(briefing.prazoFinal).getDate() + 1).toString().padStart(2, '0')}/${(new Date(briefing.prazoFinal).getMonth() + 1).toString().padStart(2, '0')}/${new Date(briefing.prazoFinal).getFullYear()}</p>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -74,7 +83,7 @@ $(()=>{
             },
             error: function(error) {
                 console.error("Erro ao buscar o briefing:", error);
-                alert("Erro ao buscar o briefing. Por favor, tente novamente mais tarde.");
+                alert("Erro ao buscar o briefing. Sua sessão pode ter expirado.");
             }
         });
     }

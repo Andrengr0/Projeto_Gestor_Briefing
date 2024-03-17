@@ -17,10 +17,20 @@
             </div><!-- logo -->
 
             <div class="user">
-                <h6><i class="fa fa-user" aria-hidden="true"></i>&nbsp;<%= nomeUsuario %> &nbsp;&nbsp; <a href="admin/logout">Sair</a></h6>
+                <h6 class="text-right"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;<%= nomeUsuario %> &nbsp;&nbsp; <a href="admin/logout">Sair</a></h6>
             </div><!-- user -->
         </div><!-- container -->
     </header>
+
+    <label class="btn-menu-mobile" for="hamburger">
+        <label class="hamburger" for="hamburger">
+            <input type="checkbox" id="hamburger">
+            <svg viewBox="0 0 32 32">
+              <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+              <path class="line" d="M7 16 27 16"></path>
+            </svg>
+          </label>
+    </label><!-- btn-menu-mobile -->
 
     <div class="content">
         <div class="container">
@@ -62,9 +72,11 @@
                     </div><!-- box-filtros -->
 
                     <div class="card-briefing-header row mt-5">
-                        <h6 class="nome col-lg-5 py-1 ml-3">Projeto:</h6>
-                        <h6 class="status col-lg-2 py-1 text-center">Estado:</h6>
-                    </div><!-- card-single-header -->
+                        <h6 class="nome col-lg-4 py-0 ml-3">Projeto:</h6>
+                        <h6 class="status col-md-2 py-0 text-center">Estado:</h6>
+                        <h6 class="col-md-3 py-0 text-center"></h6>
+                        <h6 class="prazo col-md-1 py-0 text-center">Prazo:</h6>
+                    </div><!-- card-briefing-header -->
 
                     <div id="box-card-briefing" class="box-card-briefing">
                     
@@ -74,113 +86,80 @@
         </div><!-- container -->
 
   
-  <!-- Modal para cadastro de Briefing -->
-  <div class="modal fade" id="cadastro_briefing" tabindex="-1" role="dialog" aria-labelledby="CadastroBriefing" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="TituloModalLongoExemplo">Cadastrar novo briefing</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
+        <!-- Modal para cadastro de Briefing -->
+        <div class="modal fade" id="cadastro_briefing" tabindex="-1" role="dialog" aria-labelledby="CadastroBriefing" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="TituloModalLongoExemplo">Cadastrar novo briefing</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                <form id="form-briefing" enctype="multipart/form-data" method="post">
 
-            <form id="form-briefing" enctype="multipart/form-data" method="post">
-
-                <label for="nome_cliente">Informe o nome do cliente:</label>
-                <input type="text" name="nome_cliente" id="nome_cliente" placeholder="Ex.: VivaMoveis...">
-                
-                <label for="titulo" class="mt-4">Informe um título para o projeto:</label>
-                <input type="text" name="titulo" id="titulo" placeholder="Ex.: Site para loja VivaMoveis...">
-
-                <label for="descricao" class="mt-4">Informe uma descrição do projeto:</label>
-                <textarea id="descricao" name="descricao" placeholder="Ex.: Descreva aqui o projeto.."></textarea>
-
-                <label for="estado_briefing" class="mt-4">Defina o estado do projeto:</label>
-                <select name="estado_briefing" id="estado_briefing">
-                    <option value="Negociação">Negociação</option>
-                    <option value="Aprovado">Aprovado</option>
-                    <option value="Finalizado">Finalizado</option>
-                </select>
-            </form>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="cadastrar_briefing">Cadastrar Briefing</button>
-        </div>
-      </div>
-    </div>
-  </div> <!-- Fim do modal -->
-
-
-
-  <!-- Modal para alteração de Briefing -->
-  <% for(let i=0; i < briefings.length; i++) {%>
-  <div class="modal fade" id="briefing_<%=briefings[i].idBriefing%>" tabindex="-1" role="dialog" aria-labelledby="AlterarBriefing" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="TituloModal">Alterar briefing</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-
-            <form id="form-briefing-<%=briefings[i].idBriefing%>" enctype="multipart/form-data" method="post">
-
-                <label for="nome_cliente">Nome do cliente:</label>
-                <input type="text" name="nome_cliente" id="nome_cliente" placeholder="Ex.: VivaMoveis..." value="<%=briefings[i].nomeCliente%>">
-                
-                <label for="titulo" class="mt-4">Título do projeto:</label>
-                <input type="text" name="titulo" id="titulo" placeholder="Ex.: Site para loja VivaMoveis..." value="<%=briefings[i].titulo%>">
-
-                <label for="descricao" class="mt-4">Descrição do projeto:</label>
-                <textarea id="descricao" name="descricao" placeholder="Ex.: Descreva aqui o projeto.."><%=briefings[i].descricao%></textarea>
-
-                <label for="estado_briefing" class="mt-4">Estado do projeto:</label>
-
-                
-                <select name="estado_briefing" id="estado_briefing">
-                    <% if(briefings[i].estado == "Negociação"){%>
-                        <option selected value="Negociação">Negociação</option>
-                        <option value="Aprovado">Aprovado</option>
-                        <option value="Finalizado">Finalizado</option>
-                    <%} else if(briefings[i].estado == "Aprovado"){%>
-                        <option value="Negociação">Negociação</option>
-                        <option selected value="Aprovado">Aprovado</option>
-                        <option value="Finalizado">Finalizado</option>
-                    <% } else {%>
+                    <label for="nome_cliente" style="display: block;">Informe o nome do cliente:</label>
+                    <input type="text" name="nome_cliente" id="nome_cliente" placeholder="Ex.: VivaMoveis..." maxlength="50" required>
+                    <span id="nome_cliente_invalido" style="display: none; color: #ff0000;">Campo obrigatório</span>
+                    
+                    <label for="titulo" class="mt-4" style="display: block;">Informe um título para o projeto:</label>
+                    <input type="text" name="titulo" id="titulo" placeholder="Ex.: Site para loja VivaMoveis..." maxlength="50" required>
+                    <span id="titulo_invalido" style="display: none; color: #ff0000;">Campo obrigatório</span>
+        
+                    <label for="descricao" class="mt-4" style="display: block;">Informe uma descrição do projeto:</label>
+                    <textarea id="descricao" name="descricao" placeholder="Ex.: Descreva aqui o projeto.." maxlength="5000"></textarea>
+        
+                    <label for="estado_briefing" class="mt-4">Defina o estado do projeto:</label>
+                    <select class="estado_briefing" name="estado_briefing" id="estado_briefing">
                         <option value="Negociação">Negociação</option>
                         <option value="Aprovado">Aprovado</option>
-                        <option selected value="Finalizado">Finalizado</option>
-                    <% } %>
-                </select>
+                        <option value="Finalizado">Finalizado</option>
+                    </select>
+        
+                    <!-- Novo campo para orçamento -->
+                    <label for="orcamento" class="mt-4" style="display: block;">Valor do orçamento de projeto:</label>
+                    <span>R$ </span><input style="display: inline-block;" type="number" class="orcamento" name="orcamento" id="orcamento" placeholder="Ex.: 5.000">
+                    <span id="orcamento_invalido" style="display: none; color: #ff0000;">Valor inválido</span>
+        
+                    <!-- Novo campo para data de prazo final -->
+                    <label for="prazo_final" class="mt-4" style="display: block;">Informe a data de prazo final:</label>
+                    <input type="date" class="prazo_final" name="prazo_final" id="prazo_final" required>
+                    <span id="prazo_final_invalido" style="display: none; color: #ff0000;">Data inválida</span>
+        
+                </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="cadastrar_briefing">Cadastrar Briefing</button>
+                </div>
+            </div>
+            </div>
+        </div> <!-- Fim do modal -->
 
-            </form>
+    <div class="janela-float msg-modal" style="display: none;">
+        <div class="float-box">
+            <h5 class="text-center" id="msg_modal"></h5>
+            <button class="btn-fechar">Ok</button>
+        </div>
+    </div><!-- janela-float -->
 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary alterar-briefing" data-id="<%=briefings[i].idBriefing%>">Alterar Briefing</button>
-        </div>
-      </div>
-    </div>
-  </div> <!-- Fim do modal -->
-  <% } %>
+    <!-- Modal para alteração de Briefing -->
+    <div id="box_modal_alterar_briefing"></div>
+
     </div><!-- content -->
     
     
-
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.0/dist/js/bootstrap.min.js"></script>
     <script src="/public/js/cadastro_briefing.js"></script>
     <script src="/public/js/alterar_filtrar_obter-briefing.js"></script>
+    <script src="/public/js/modal_alterar_briefing.js"></script>
     <script src="/public/js/buscar_briefing.js"></script>
     <script src="/public/js/modal_excluir_briefing.js"></script>
     <script src="/public/js/transition_menu_admin.js"></script>
+    <script src="/public/js/obter_data_atual.js"></script>
+    <script src="/public/js/menu_hamburguer_painel.js"></script>
+    <script src="/public/js/verifica_altura_main.js"></script>
 </body>
 </html>
