@@ -42,7 +42,7 @@ Para executar o projeto localmente, siga estas etapas:
 1. **Clonar o Repositório:**
     Faça um clone do projeto na sua máquina
    ```
-   git clone https://github.com/Andrengr0/Projeto_Briefing.git
+   git clone https://github.com/Andrengr0/Projeto_Gestor_Briefing.git
    ```
 
 2. **Instalar Dependências:**
